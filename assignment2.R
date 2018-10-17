@@ -1,0 +1,7 @@
+library("tm")
+library("NLP")
+reviews.neg.descriptive1 <- VCorpus(DirSource("C:/Users/Iro Sfoungari/Desktop/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold1", encoding="UTF-8"))
+reviews.neg.descriptive2 <- VCorpus(DirSource("C:/Users/Iro Sfoungari/Desktop/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold2", encoding="UTF-8"))
+reviews.neg.descriptive3 <- VCorpus(DirSource("C:/Users/Iro Sfoungari/Desktop/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold3", encoding="UTF-8"))
+reviews.neg.descriptive4 <- VCorpus(DirSource("C:/Users/Iro Sfoungari/Desktop/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold4", encoding="UTF-8"))
+reviews.neg.descriptive5<- VCorpus(DirSource("C:/Users/Iro Sfoungari/Desktop/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold5", encoding="UTF-8"))
