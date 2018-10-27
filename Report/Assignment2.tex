@@ -1,0 +1,101 @@
+\documentclass[a4paper,11pt]{article}
+%\usepackage[slovene]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{url}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\begin{document}
+\thispagestyle{empty}
+%\setlength{\parindent}{0em}
+
+\includegraphics[scale=0.35]{UUlogo.png}
+
+\vspace{50mm}
+
+\begin{center}
+\begin{large}
+Data Mining: Assignment 2 \\[3mm]
+\textbf{
+\uppercase{Text Classification for the Detection of Opinion Spam}} \\[25mm]
+\end{large}
+
+\begin{tabularx}{\textwidth}{YY}
+Ana Borovac & Argyro (Iro) Sfoungari \\
+6584446 & 6528015
+\end{tabularx}
+\end{center}
+
+\vfill
+
+October, 2018
+
+\newpage
+
+\tableofcontents
+
+\vspace{3cm}
+
+\begin{abstract}
+\end{abstract}
+
+\newpage
+
+\section{Introduction}
+
+\section{Data}
+Our data consists of 400 negative deceptive and 400 negative truthful hotel reviews that have been collected by Myble Ott and others %TODO (!!!!cite!!!). 
+
+\subsection{Data preprocessing}
+Before modeling we did some data preprocessing in order to get better models for predictiong if a review is fake or real. First step in data preprocessing was to remove punctuation marks, after that we made every letter lower case, we also removed stopwords, numbers and excess whitespace. Next, we created a test and a training set. Because we wanted to use cross validation, we divided our data into 5 folds (each of size 160 samples - 80 fake reviews and 80 truthful reviews). So, 4 of the folds represented a training set, the remaining 5th fold was a test set. At that moment every unique word from the training reviews was a feature.  A number of features was large %TODO  how much
+therefore we removed the words as features which occur less than 5~\% of training documents. Next, we created a new training set which consists all the features from the previous one and bigrams. We again removed bigrams that occur in lass that  5~\% of training documents. At the end we had two training sets ready to be used. 
+
+\section{Methods}
+We used different classifiers to model our task:
+\begin{itemize}
+	\item naive Bayes (generative linear classifier) -- subsection \ref{subsec: naivebayes},
+	\item logistic regression (discriminative linear classifier) -- subsection \ref{subsec: logisticregression},
+	\item classification tree (flexible classifier) -- subsection \ref{subsec: classificationtree},
+	\item random forests (flexible classifier) -- subsection \ref{subsec: randomforests}.
+\end{itemize}
+
+\subsection{Naive Bayes}
+\label{subsec: naivebayes}
+%TODO description
+For naive Bayes we used the code from the lectures (%TODO cite
+) 
+
+\subsection{Logistic regression}
+\label{subsec: logisticregression}
+For logistic regression model we used \verb|cv.glmnet| from \verb|glmnet| library
+
+\subsection{Classification tree}
+\label{subsec: classificationtree}
+
+\subsection{Random forests}
+\label{subsec: randomforests}
+
+\section{Results}
+
+\section{Analysis}
+
+\section{Conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
