@@ -46,15 +46,24 @@ October, 2018
 \newpage
 
 \section{Introduction}
+Nowadays email filters are able to classify spam and not spam emails quite successfully. Imagine now that you have a web site with hotel reviews and your goal is to offer the most truthful reviews but you can not check every single review. Therefore you would like to have a mechanism which is going to help you to achieve your goal. 
+
+In this assignment we tried to solved the above problem with 4 methods; naive Bayes, logistic regression, classification tree and random forests. Before we started, we analysed the work that has been done already (section \ref{sec: relatedwork}). Next, we did some data preprocessing, it is described in the section \ref{sec: data}. Used methods are explained in the section \ref{sec: methods} and analysis of the results (section \ref{sec: results}) is in the section \ref{sec: analysis}.
+
+\section{Related work}
+\label{sec: relatedwork}
 
 \section{Data}
-Our data consists of 400 negative deceptive and 400 negative truthful hotel reviews that have been collected by Myble Ott and others %TODO (!!!!cite!!!). 
+\label{sec: data}
+Our data consists of 400 negative deceptive and 400 negative truthful hotel reviews that have been collected by Myble Ott and others (\cite{article2}, \cite{article1}). 
 
 \subsection{Data preprocessing}
 Before modeling we did some data preprocessing in order to get better models for predictiong if a review is fake or real. First step in data preprocessing was to remove punctuation marks, after that we made every letter lower case, we also removed stopwords, numbers and excess whitespace. Next, we created a test and a training set. Because we wanted to use cross validation, we divided our data into 5 folds (each of size 160 samples - 80 fake reviews and 80 truthful reviews). So, 4 of the folds represented a training set, the remaining 5th fold was a test set. At that moment every unique word from the training reviews was a feature.  A number of features was large %TODO  how much
 therefore we removed the words as features which occur less than 5~\% of training documents. Next, we created a new training set which consists all the features from the previous one and bigrams. We again removed bigrams that occur in lass that  5~\% of training documents. At the end we had two training sets ready to be used. 
 
 \section{Methods}
+\label{sec: methods}
+
 We used different classifiers to model our task:
 \begin{itemize}
 	\item naive Bayes (generative linear classifier) -- subsection \ref{subsec: naivebayes},
@@ -75,13 +84,17 @@ For logistic regression model we used \verb|cv.glmnet| from \verb|glmnet| librar
 
 \subsection{Classification tree}
 \label{subsec: classificationtree}
+For growing the classification tree we used a function \verb|rpart| from R library also called \verb|rpart|. Library also contains a function for pruning the tree, \verb|prune|. We used it with complexity parameter \verb|cp| equals to $0{,}001$.
 
 \subsection{Random forests}
 \label{subsec: randomforests}
+We grew a random forest of $200$ trees with the function \verb|randomForest| (R library \verb|randomForest|). We set \verb|mtry| parameter to $6$ which means that on each step the algorithm selects $6$ random observed features.
 
 \section{Results}
+\label{sec: results}
 
 \section{Analysis}
+\label{sec: analysis}
 
 \section{Conclusion}
 
