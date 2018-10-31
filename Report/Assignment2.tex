@@ -46,27 +46,40 @@ October, 2018
 \newpage
 
 \section{Introduction}
-Nowadays email filters are able to classify spam and not spam emails quite successfully. Imagine now that you have a web site with hotel reviews and your goal is to offer the most truthful reviews but you can not check every single review. Therefore you would like to have a mechanism which is going to help you to achieve your goal. 
+Nowadays email filters are able to classify spam and not spam emails quite successfully. Imagine now that you have a web site with hotel reviews and your goal is to offer the most truthful reviews but you can not check every single review and it is also hard to recognise when the review is not truethful. Therefore you would like to have a mechanism which is going to help you to achieve your goal. 
 
-In this assignment we tried to solved the above problem with 4 methods; naive Bayes, logistic regression, classification tree and random forests. Before we started, we analysed the work that has been done already (section \ref{sec: relatedwork}). Next, we did some data preprocessing, it is described in the section \ref{sec: data}. Used methods are explained in the section \ref{sec: methods} and analysis of the results (section \ref{sec: results}) is in the section \ref{sec: analysis}.
+In this assignment we tried to solve the above problem with 4 methods; Naive Bayes, logistic regression, classification tree and random forests. Before we started, we analysed the work that has been done already (section \ref{sec: relatedwork}). Next, we did some data preprocessing, it is described in the section \ref{sec: data}. Used methods are explained in the section \ref{sec: methods} and analysis of the results (section \ref{sec: results}) is in the section \ref{sec: analysis}.
 
 \section{Related work}
 \label{sec: relatedwork}
+The authors of “Finding Deceptive Opinion Spam by Any Stretch of the Imagination” \cite{article1} compared truthful and deceptive positive reviews for hotels. They used Naive Bayes and Support Vectors Machine classifiers. For comparison they also had 3 human untrained judges which tried to predict if a review was real or fake.  The results had shown that automated classifiers outperform human judges in almost every metric (precision, recall, F-score). They explain that with that untrained humans often focus on unreliable cues to
+deception. One of the results was also that models trained only on unigrams outperformed all non--text-categorizations approaches (genre identification and psycholingustic deception detection). Furthermore, the results were even better when bigrams were used.
+
+In the article “Negative Deceptive Opinion Spam” \cite{article2} the authors created corpus of gold standard 400 reviews on 20 Chicago hotels and then used them to compare $n$-gram--based Support Vector Machine classifiers with untrained human judges. They concluded that the best detection performance was achived through automated classifiers. 
+
+
+
 
 \section{Data}
 \label{sec: data}
-Our data consists of 400 negative deceptive and 400 negative truthful hotel reviews that have been collected by Myble Ott and others (\cite{article2}, \cite{article1}). 
+Our data consisted of 400 negative deceptive and 400 negative truthful hotel reviews that have been collected by Myble Ott and others (\cite{article2}, \cite{article1}). 
 
 \subsection{Data preprocessing}
-Before modeling we did some data preprocessing in order to get better models for predictiong if a review is fake or real. First step in data preprocessing was to remove punctuation marks, after that we made every letter lower case, we also removed stopwords, numbers and excess whitespace. Next, we created a test and a training set. Because we wanted to use cross validation, we divided our data into 5 folds (each of size 160 samples - 80 fake reviews and 80 truthful reviews). So, 4 of the folds represented a training set, the remaining 5th fold was a test set. At that moment every unique word from the training reviews was a feature.  A number of features was large %TODO  how much
-therefore we removed the words as features which occur less than 5~\% of training documents. Next, we created a new training set which consists all the features from the previous one and bigrams. We again removed bigrams that occur in lass that  5~\% of training documents. At the end we had two training sets ready to be used. 
+Before modeling we did some data preprocessing in order to get better models for predicting if a review is fake or real. First step in data preprocessing was to remove punctuation marks, after that we made every letter lower case, we also removed stopwords, numbers and excess whitespace. 
+
+Next, we created a test and a training set. Because we wanted to use cross validation, we divided our data into 5 folds (each of size 160 samples - 80 fake reviews and 80 truthful reviews). So, 4 of the folds represented a training set, the remaining 5th fold was a test set. 
+
+At that moment every unique word from the training reviews was a feature.  A number of features was large %TODO  how much
+therefore we removed the words as features which occur less than 1~\% of training documents.
+
+After that we created a new training set which consisted all the features from the previous training set and bigrams. We again removed bigrams that occur in lass that  5~\% of training documents. At the end we had two training sets ready to be used. 
 
 \section{Methods}
 \label{sec: methods}
 
 We used different classifiers to model our task:
 \begin{itemize}
-	\item naive Bayes (generative linear classifier) -- subsection \ref{subsec: naivebayes},
+	\item Naive Bayes (generative linear classifier) -- subsection \ref{subsec: naivebayes},
 	\item logistic regression (discriminative linear classifier) -- subsection \ref{subsec: logisticregression},
 	\item classification tree (flexible classifier) -- subsection \ref{subsec: classificationtree},
 	\item random forests (flexible classifier) -- subsection \ref{subsec: randomforests}.
@@ -74,21 +87,36 @@ We used different classifiers to model our task:
 
 \subsection{Naive Bayes}
 \label{subsec: naivebayes}
-%TODO description
-For naive Bayes we used the code from the lectures (%TODO cite
-) 
+Naive Bayes is a probabilistic classifier. Class is predicted from features which has highest probability with independence assumption (features are independent within each class) \cite{naiveBayes}:
+\[
+\hat{c} = \arg\max_{c \in C} P(c) \prod_{i = 1}^m P(x_i | c)
+\]
+
+For Naive Bayes we used the code from the lectures \cite{code}. 
 
 \subsection{Logistic regression}
 \label{subsec: logisticregression}
-For logistic regression model we used \verb|cv.glmnet| from \verb|glmnet| library
+Logistic regression is one of discriminative classification methods \cite{logisticRegression}. That means that modelling of probability, how likely are we to predict a class $c$ with given input, is direct. In a binary case we predict class $1$ if it holds:
+\[
+\frac{P(Y = 1 | x)}{P(Y = 0 | x)} > 1; \quad P (Y = 1 | x) = \frac{1}{1 + e^{-\beta^T x}}
+\]
+otherwise we predict class $0$.
+
+For logistic regression model we used \verb|cv.glmnet| function from \verb|glmnet| library \cite{glmnet}. The function does $k$-fold cross-validation and as a result returns a value for \verb|lambda|. We left the default value of $k$, which is set to $10$. Since we that our model is binomial (\verb|family = “binomial”|), we were able to set $\verb|type.measure|$ to “class”. This means that the loss which is used for cross-validation is misclassification error. When predicting the classes for the test samples, we first used largest lambda s.t.\ error is within 1 standard error of the minimum.
 
 \subsection{Classification tree}
 \label{subsec: classificationtree}
-For growing the classification tree we used a function \verb|rpart| from R library also called \verb|rpart|. Library also contains a function for pruning the tree, \verb|prune|. We used it with complexity parameter \verb|cp| equals to $0{,}001$.
+Classification trees are usually not the best models \cite{classificationTrees}, but are easy to interpret and can handle both numerical and categorical attributes. 
+
+For growing the classification tree we used a function \verb|rpart| from R library also called \verb|rpart| \cite{rpart}. We set \verb|method| parameter to “class” and complexity parameter \verb|cp| to $0$. Library also contains a function for pruning the tree, \verb|prune|. First, we used it with complexity parameter \verb|cp| equals to $0{,}001$.
+
+% plotcp(reviews.rpart, minline = TRUE, lty = 3, col = 1, upper = c("size", "splits", "none"))
 
 \subsection{Random forests}
 \label{subsec: randomforests}
-We grew a random forest of $200$ trees with the function \verb|randomForest| (R library \verb|randomForest|). We set \verb|mtry| parameter to $6$ which means that on each step the algorithm selects $6$ random observed features.
+Random forests are improved classification trees, where the best split is chosen among $k$ random features and not among all of them \cite{randomForestsL}. 
+
+We grew a random forest of $200$ trees with the function \verb|randomForest| (R library \verb|randomForest| \cite{randomForestsL}). At the begining we set \verb|mtry| parameter to $6$ which means that on each step the algorithm selects $6$ random observed features.
 
 \section{Results}
 \label{sec: results}
